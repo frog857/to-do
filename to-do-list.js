@@ -104,6 +104,21 @@ class TodoList {
     return `${title}\n${list}`;
   }
 
+  forEach(cb) {
+    this.todos.forEach(todo => cb(todo));
+  }
+
+  filter(cb) {
+    // return this.todos.filter(todo => cb(todo)); => suboptimal: introduces additional dependency
+    let filteredTodos =  new TodoList(this.title);
+    this.forEach(todo => {
+      if (cb(todo)) {
+        filteredTodos.add(todo);
+      }
+    })
+    return filteredTodos;
+  }
+
   }
 
 let list = new TodoList("Today's Todos");
@@ -126,4 +141,7 @@ list.add(todo6);
 list.markDoneAt(1);
 list.markDoneAt(3);
 
-console.log(`${list}`);
+console.log(list.toString());
+let doneTodos = list.filter(todo => todo.isDone());
+console.log(doneTodos);
+let filterdFirst = list.filter(todo => todo.isDone()).first();
